@@ -5,7 +5,7 @@ output:
     keep_md: true
 ---
 
-```{r, echo=FALSE}
+```{r}
 ## Loading and preprocessing the data
 act <- read.csv("activity.csv", colClasses = c("numeric", "character", 
     "numeric"))
@@ -13,26 +13,26 @@ head(act)
 tail(act)
 names(act)
 ```
-```{r, echo=FALSE}
+```{r}
 library(lattice)
 act$date <- as.Date(act$date, "%Y-%m-%d")
 ```
-```{r, echo=FALSE}
+```{r}
 ## What is mean total number of steps taken per day?
 TotalSteps <- aggregate(steps ~ date, data = act, sum, na.rm = TRUE)
 hist(TotalSteps$steps, main = "TotalSteps/day", xlab = "Day", col = "red")
 ```
-```{r, echo=FALSE}
+```{r}
 mean(TotalSteps$steps)
 median(TotalSteps$steps)
 ```
-```{r, echo=FALSE}
+```{r}
 steps <- rep(NA, 61)
 day <- rep("NA", 61)
 steps_day <- tapply(act$steps, act$date, sum, na.rm = T)
 length(steps_day)
 ```
-```{r, echo=FALSE}
+```{r}
 for (i in 1:length(steps_day)) {
   steps[i] <- steps_day[[i]]
   day[i] <- names(steps_day)[i]
@@ -41,10 +41,10 @@ for (i in 1:length(steps_day)) {
 day_n_steps<- data.frame(day, steps)
 head(day_n_steps)
 ```
-```{r, echo=FALSE}
+```{r}
 hist(day_n_steps$steps, main = "TotalSteps/day", xlab = "Day", col = "green")
 ```
-```{r, echo=FALSE}
+```{r}
 ## What is the average daily activity pattern?
 
 TimeSeries <- tapply(act$steps, act$interval, mean, na.rm = TRUE)
@@ -53,17 +53,17 @@ plot(row.names(TimeSeries), TimeSeries, type = "l", xlab = "5 minute interval",
      ylab = "Average across all Days", main = "Average number of steps taken", 
      col = "red")
 ```
-```{r, echo=FALSE}
+```{r}
 MaxInterval <- which.max(TimeSeries)
 names(MaxInterval)
 ```
-```{r, echo=FALSE}
+```{r}
 ## Imputing missing values
 
 act_NA <- sum(is.na(act))
 act_NA
 ```
-```{r, echo=FALSE}
+```{r}
 AverageSteps <- aggregate(steps ~ interval, data = act, FUN = mean)
 fill_NA <- numeric()
 for (i in 1:nrow(act)) {
@@ -79,15 +79,15 @@ for (i in 1:nrow(act)) {
 act_new <- act
 act_new$steps <- fill_NA
 ```
-```{r, echo=FALSE}
+```{r}
 TotalSteps2 <- aggregate(steps ~ date, data = act_new, sum, na.rm = TRUE)
 ```
-```{r, echo=FALSE}
+```{r}
 hist(TotalSteps2$steps, main = "Total steps/day", xlab = "Day", col = "red")
 mean(TotalSteps2$steps)
 median(TotalSteps2$steps)
 ```
-```{r, echo=FALSE}
+```{r}
 ## Are there differences in activity patterns between weekdays and weekends?
 
 day <- weekdays(act$date)
@@ -106,7 +106,7 @@ act$daylevel <- factor(act$daylevel)
 StepsByDay <- aggregate(steps ~ interval + daylevel, data = act, mean)
 names(stepsByDay) <- c("interval", "daylevel", "steps")
 ````
-```{r, echo=FALSE}
+```{r}
 xyplot(steps ~ interval | daylevel, stepsByDay, type = "l", layout = c(1, 2), 
        xlab = "Interval", ylab = "Number_of_steps")
 ```
